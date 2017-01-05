@@ -16,6 +16,10 @@ unsigned char shiftCodes[] = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 0, 0, 0, ' '};
 
 
+/*
+Get a scan code from the keyboard.
+Parameters: 
+*/
 unsigned char getScanCode()
 {
   unsigned char code = inb(KEYBOARD_PORT);
@@ -41,21 +45,21 @@ unsigned char isKeyPressedByCode(unsigned char scanCode)
 
 unsigned char scanCode2Ascii(unsigned char scanCode)
 {
-  if(scanCode < 0x02 || scanCode > 0x39)
+  if(scanCode < 0x02 || scanCode > 0x39) //not ascii characters
   {
     return 0;
   }
   unsigned char isShiftPressed = isKeyPressedByCode(0x36) || isKeyPressedByCode(0x2A);
   unsigned char isCapsLockPressed = (flags & CAPSLOCK_MASK) >> 6;
-  if (noShift[scanCode - 0x2] <= 'z' && noShift[scanCode - 0x2] >= 'a')
+  if (noShift[scanCode - 0x2] <= 'z' && noShift[scanCode - 0x2] >= 'a') //if the code is a letter.
   {
-    return noShift[scanCode - 0x2] + ('A'-'a')*(isCapsLockPressed ^ isShiftPressed);
+    return noShift[scanCode - 0x2] + ('A'-'a')*(isCapsLockPressed ^ isShiftPressed); //make big if caps lock xor shift is pressed.
   }
   if (isShiftPressed)
   {
-    return shiftCodes[scanCode-0x2];
+    return shiftCodes[scanCode-0x2]; //if shift is pressed get the shifted character.
   }
-  return noShift[scanCode-0x2];
+  return noShift[scanCode-0x2]; //get the unshifted character.
 }
 
 unsigned char getCharFromKeyboard()
@@ -63,13 +67,13 @@ unsigned char getCharFromKeyboard()
   static unsigned sc = 0;
   unsigned char ch = 0;
   do {
-    if(getScanCode() != sc)
+    if(getScanCode() != sc) //wait until character changes.
     {
       sc = getScanCode();
-      if(ch = scanCode2Ascii(sc))
+      if(ch = scanCode2Ascii(sc)) //if the scan code is an ascii char return it
       {
         return ch;
       }
     }
-  } while(1);
+  } while(1); //do until character is recieved.
 }
