@@ -61,11 +61,12 @@ int printf(const char* restrict format, ...) {
 			if (!print(str, len))
 				return -1;
 			written += len;
-		} else if(*format == 'd' || *format == 'i') {
+		} else if(*format == 'd' || *format == 'i' || *format == 'x') {
+			char ch = *format;
 			format++;
 			int num = va_arg(parameters, int);
 			const char buffer[100];
-			itoa(num, buffer);
+			itoa(num, buffer, ch == 'x' ? 16 : 10);
 			size_t len = strlen(buffer);
 			if (maxrem < len) {
 				// TODO: Set errno to EOVERFLOW

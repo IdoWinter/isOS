@@ -1,21 +1,27 @@
 #include <string.h>
 
-void itoa(int num, char* buffer)
+void itoa(int num, char* buffer, char base)
 {
   *buffer = 0;
+  if (base < 2 || base > 36)
+  {
+    return;
+  }
+
   if(num < 0) {
     *buffer++ = '-';
     *buffer = 0;
-    num = -num;
   }
   else if(!num) {
     *buffer++ = '0';
     *buffer = 0;
   }
+
   while(num) {
-    char digit[2] = { num % 10 + '0', 0 };
+
+    char digit[2] = {"ZYXWVUTSRQPONMLKJIHGFEDCBA9876543210123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"[35 + num % base], 0 };
     strcat(buffer, digit);
-    num /= 10;
+    num /= base;
   }
   strrev(buffer);
 }
