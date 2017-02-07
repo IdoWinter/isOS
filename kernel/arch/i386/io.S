@@ -24,3 +24,8 @@ outb:
 enable_interrupts:
   sti
   ret
+
+.global clear_interrupts
+clear_interrupts:
+  cli
+  ret

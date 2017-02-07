@@ -18,5 +18,6 @@ unsigned char outb(unsigned short port, char b);
 
 void enable_interrupts();
 
+void clear_interrupts();
 
 #endif

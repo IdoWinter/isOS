@@ -1,7 +1,11 @@
 #ifndef _KERNEL_IRQ_H
 #define _KERNEL_IRQ_H
 
-#include <kernel/isr.h>
+#include <kernel/state.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
 
 #define PIC1		0x20		/* IO base address for master PIC */
 #define PIC2		0xA0		/* IO base address for slave PIC */
@@ -32,5 +36,7 @@ void setup_irq();
 void acknowledge_IRQ(char interrupt);
 
 void irq_handler(registers_t regs);
+
+void add_callback(void (*callback)(), uint8_t index);
 
 #endif

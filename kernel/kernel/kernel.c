@@ -4,6 +4,7 @@
 #include <kernel/keyboard.h>
 #include <kernel/descriptors.h>
 #include <kernel/irq.h>
+#include <kernel/time.h>
 
 void kernel_main(void *mbd, int magic) {
 	terminal_initialize();
@@ -16,8 +17,9 @@ void kernel_main(void *mbd, int magic) {
 	unsigned char ch = 0;
 	while(1)
 	{
-		ch = getCharFromKeyboard();
-		printf("%c", ch);
+		long my_time = time();
+		printf("time: %d\n", my_time);
+		wait(1000);
 	}
 	printf("Hello, kernel World!\n");
 	for(;;)

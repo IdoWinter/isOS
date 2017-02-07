@@ -11,7 +11,7 @@
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
 static uint16_t* const VGA_MEMORY = (uint16_t*) 0xB8000;
-char text_buffer[VGA_WIDTH*VGA_HEIGHT+1] = { 0 };
+char text_buffer[VGA_WIDTH*VGA_HEIGHT] = { 0 };
 
 static size_t terminal_row;
 static size_t terminal_column;
@@ -61,7 +61,6 @@ Put a character at a certain location.
 */
 void terminal_putentryat(unsigned char c, uint8_t color, size_t x, size_t y) {
 	const size_t index = y * VGA_WIDTH + x;
-	text_buffer[text_position] = c;
 	terminal_buffer[index] = vga_entry(c, color);
 }
 

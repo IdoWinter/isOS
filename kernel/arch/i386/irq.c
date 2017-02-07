@@ -1,5 +1,7 @@
-#include <kernel/io.h>
 #include <kernel/irq.h>
+#include <kernel/io.h>
+#include <kernel/time.h>
+#include <stdio.h>
 
 void acknowledge_IRQ(char interrupt)
 {
@@ -28,12 +30,28 @@ void setup_irq()
   outb(PIC2_DATA, ICW4_8086);
   outb(PIC1_DATA, 0x00); //Do not ignore interrupts.
   outb(PIC2_DATA, 0x00); //Do not ignore interrupts.
+  timer_phase(1000);
+  add_callback(&handleTime, 0);
   enable_interrupts();
 }
 
+
+void (*isr_callbacks[16])() = { 0 };
+
 void irq_handler(registers_t regs)
 {
-  printf("irq 0x%x detected!!!!\n", regs.int_no);
   acknowledge_IRQ(regs.int_no);
+  if(isr_callbacks[regs.int_no - PIC1_START_INTERRUPT] != 0)
+  {
+    isr_callbacks[regs.int_no - PIC1_START_INTERRUPT]();
+  }
+  else
+  {
+    printf("IRQ %x detected!!\n", regs.int_no - PIC1_START_INTERRUPT);
+  }
+}
 
+void add_callback(void (*callback)(), uint8_t index)
+{
+    isr_callbacks[index] = callback;
 }
